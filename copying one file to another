@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>     // for read(), write(), close()
+#include <fcntl.h>      // for open()
+
+#define BUFFER_SIZE 1024   // size of data chunk to copy
+
+int main() {
+    int source_fd, dest_fd;  
+    char buffer[BUFFER_SIZE];
+    ssize_t bytesRead;
+
+    // Open source file (read-only)
+    source_fd = open("source.txt", O_RDONLY);
+    if (source_fd < 0) {
+        perror("Error opening source file");
+        exit(1);
+    }
+
+    // Open/Create destination file (write-only, truncate if exists, create with 0644 permissions)
+    dest_fd = open("destination.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (dest_fd < 0) {
+        perror("Error opening/creating destination file");
+        close(source_fd);
+        exit(1);
+    }
+
+    // Copy loop
+    while ((bytesRead = read(source_fd, buffer, BUFFER_SIZE)) > 0) {
+        if (write(dest_fd, buffer, bytesRead) != bytesRead) {
+            perror("Error writing to destination file");
+            close(source_fd);
+            close(dest_fd);
+            exit(1);
+        }
+    }
+
+    if (bytesRead < 0) {
+        perror("Error reading source file");
+    }
+
+    printf("File copied successfully!\n");
+
+    // Close files
+    close(source_fd);
+    close(dest_fd);
+
+    return 0;
+}
