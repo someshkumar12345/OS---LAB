@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>   // For opendir(), readdir(), closedir()
+#include <errno.h>
+
+int main(int argc, char *argv[]) {
+    DIR *dir;
+    struct dirent *entry;
+    char *path;
+
+    // If no path given, use current directory
+    if (argc < 2) {
+        path = ".";
+    } else {
+        path = argv[1];
+    }
+
+    // Open directory
+    dir = opendir(path);
+    if (dir == NULL) {
+        perror("opendir");
+        exit(1);
+    }
+
+    printf("Listing of directory: %s\n", path);
+
+    // Read and print directory entries
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    // Close directory
+    closedir(dir);
+
+    return 0;
+}
