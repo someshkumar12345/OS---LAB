@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+// Function to print permissions in rwx form
+void print_permissions(mode_t mode) {
+    char perms[10];
+
+    perms[0] = (mode & S_IRUSR) ? 'r' : '-';  // owner read
+    perms[1] = (mode & S_IWUSR) ? 'w' : '-';  // owner write
+    perms[2] = (mode & S_IXUSR) ? 'x' : '-';  // owner execute
+
+    perms[3] = (mode & S_IRGRP) ? 'r' : '-';  // group read
+    perms[4] = (mode & S_IWGRP) ? 'w' : '-';  // group write
+    perms[5] = (mode & S_IXGRP) ? 'x' : '-';  // group execute
+
+    perms[6] = (mode & S_IROTH) ? 'r' : '-';  // others read
+    perms[7] = (mode & S_IWOTH) ? 'w' : '-';  // others write
+    perms[8] = (mode & S_IXOTH) ? 'x' : '-';  // others execute
+    perms[9] = '\0';
+
+    printf("Permissions: %s\n", perms);
+}
+
+int main(int argc, char *argv[]) {
+    struct stat st;
+
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+        exit(1);
+    }
+
+    // Get file status
+    if (stat(argv[1], &st) == -1) {
+        perror("stat");
+        exit(1);
+    }
+
+    printf("File: %s\n", argv[1]);
+
+    // Show owner, group, others permissions
+    print_permissions(st.st_mode);
+
+    printf("Owner UID: %d\n", st.st_uid);
+    printf("Group GID: %d\n", st.st_gid);
+    printf("File Size: %ld bytes\n", st.st_size);
+
+    return 0;
+}
