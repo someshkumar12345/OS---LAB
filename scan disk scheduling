@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, i, j, head, size, dir, seek = 0;
+
+    printf("Enter number of disk requests: ");
+    scanf("%d", &n);
+
+    int request[n], temp;
+    printf("Enter the disk requests:\n");
+    for (i = 0; i < n; i++)
+        scanf("%d", &request[i]);
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    printf("Enter total disk size (0 to size-1): ");
+    scanf("%d", &size);
+
+    printf("Enter head movement direction (1=high, 0=low): ");
+    scanf("%d", &dir);
+
+    // sort requests
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (request[i] > request[j]) {
+                temp = request[i];
+                request[i] = request[j];
+                request[j] = temp;
+            }
+        }
+    }
+
+    // find head position in sorted order
+    int pos;
+    for (i = 0; i < n; i++) {
+        if (head < request[i]) {
+            pos = i;
+            break;
+        }
+    }
+
+    printf("\nSeek Sequence: ");
+    // move towards high
+    if (dir == 1) {
+        for (i = pos; i < n; i++) {
+            printf("%d -> ", request[i]);
+            seek += abs(request[i] - head);
+            head = request[i];
+        }
+        // go to end
+        printf("%d -> ", size - 1);
+        seek += abs((size - 1) - head);
+        head = size - 1;
+
+        // then move backward
+        for (i = pos - 1; i >= 0; i--) {
+            printf("%d -> ", request[i]);
+            seek += abs(request[i] - head);
+            head = request[i];
+        }
+    }
+    // move towards low
+    else {
+        for (i = pos - 1; i >= 0; i--) {
+            printf("%d -> ", request[i]);
+            seek += abs(request[i] - head);
+            head = request[i];
+        }
+        // go to 0
+        printf("0 -> ");
+        seek += head;
+        head = 0;
+
+        // then move forward
+        for (i = pos; i < n; i++) {
+            printf("%d -> ", request[i]);
+            seek += abs(request[i] - head);
+            head = request[i];
+        }
+    }
+
+    printf("\nTotal Seek Time = %d\n", seek);
+    printf("Average Seek Time = %.2f\n", (float)seek / n);
+
+    return 0;
+}
