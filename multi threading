@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <pthread.h>
+
+#define N 5
+int arr[N] = {1, 2, 3, 4, 5};
+int sum = 0;
+
+void *calculate_sum(void *arg) {
+    int i;
+    for (i = 0; i < N; i++) {
+        sum += arr[i];
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t t1;
+    pthread_create(&t1, NULL, calculate_sum, NULL);
+    pthread_join(t1, NULL);
+    printf("Sum of array = %d\n", sum);
+    return 0;
+}
