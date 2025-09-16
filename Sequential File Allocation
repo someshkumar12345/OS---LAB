@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+struct File {
+    int start, length, block[20];
+};
+
+int main() {
+    int n, i, j, k = 0;
+    printf("Enter number of files: ");
+    scanf("%d", &n);
+
+    struct File f[n];
+    for (i = 0; i < n; i++) {
+        printf("Enter start block and length of file %d: ", i + 1);
+        scanf("%d %d", &f[i].start, &f[i].length);
+        for (j = 0; j < f[i].length; j++) {
+            f[i].block[j] = f[i].start + j;
+        }
+    }
+
+    printf("\nFile\tStart\tLength\tBlocks\n");
+    for (i = 0; i < n; i++) {
+        printf("F%d\t%d\t%d\t", i + 1, f[i].start, f[i].length);
+        for (j = 0; j < f[i].length; j++)
+            printf("%d ", f[i].block[j]);
+        printf("\n");
+    }
+    return 0;
+} Sequential code
