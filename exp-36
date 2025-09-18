@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Block {
+    int blockNum;
+    struct Block *next;
+};
+
+int main() {
+    int n, i, b;
+    struct Block *head = NULL, *temp, *last = NULL;
+
+    printf("Enter number of blocks in the file: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter block number for block %d: ", i + 1);
+        scanf("%d", &b);
+
+        temp = (struct Block *)malloc(sizeof(struct Block));
+        temp->blockNum = b;
+        temp->next = NULL;
+
+        if (head == NULL) head = temp;
+        else last->next = temp;
+
+        last = temp;
+    }
+
+    printf("File stored as linked list of disk blocks:\n");
+    temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->blockNum);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+    return 0;
+}
