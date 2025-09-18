@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int main() {
+    int owner = 7, group = 5, others = 4; // rwx=7, r-x=5, r--=4
+    int user, perm;
+
+    printf("File permissions set as: owner=7(rwx), group=5(r-x), others=4(r--)\n");
+    printf("Enter user type (1=owner, 2=group, 3=others): ");
+    scanf("%d", &user);
+
+    if (user == 1) perm = owner;
+    else if (user == 2) perm = group;
+    else perm = others;
+
+    printf("Permissions: ");
+    printf((perm & 4) ? "r" : "-");
+    printf((perm & 2) ? "w" : "-");
+    printf((perm & 1) ? "x" : "-");
+    printf("\n");
+
+    return 0;
+}
