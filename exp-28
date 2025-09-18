@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE 1024
+
+void grep(const char *pattern, const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        perror("Error opening file");
+        return;
+    }
+
+    char line[MAX_LINE];
+    int line_no = 1;
+    int found = 0;
+
+    while (fgets(line, sizeof(line), fp)) {
+        if (strstr(line, pattern)) {
+            printf("%s:%d: %s", filename, line_no, line);
+            found = 1;
+        }
+        line_no++;
+    }
+
+    if (!found) {
+        printf("Pattern '%s' not found in %s\n", pattern, filename);
+    }
+
+    fclose(fp);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        printf("Usage: %s <pattern> <filename>\n", argv[0]);
+        return 1;
+    }
+
+    grep(argv[1], argv[2]);
+    return 0;
+}
